@@ -78,7 +78,6 @@ let searchString = "";
 // URL = searchURL + apiURL + "&purity=100"; // SFW // Default
 // URL = searchURL + apiURL + "&purity=110"; // sketchy
 // URL = searchURL + apiURL + "&purity=111"; // NSFW
-// URL = searchURL + apiURL + "&purity=111"; // NSFW
 
 // Search topRange -- Sorting MUST be set to 'toplist'
 // 1d, 3d, 1w, 1M* , 3M, 6M, 1y
@@ -120,13 +119,22 @@ let searchString = "";
 
 // console.log(URL);
 
+// ####################################
 // BEGIN Code For Testing
 // txtSearch.value = "space art";
-// txtExcludeSearch.value = "anime";
 // txtSearch.value = "minimalism";
-txtSearch.value = "Cthulhu";
+// txtSearch.value = "Cthulhu";
+// txtSearch.value = "Rogue";
+// txtSearch.value = "Star Wars";
+// txtSearch.value = "LEGO";
+// txtSearch.value = "Moon";
+// txtSearch.value = "architecture";
+txtSearch.value = "Asian architecture";
+// txtExcludeSearch.value = "anime";
+txtExcludeSearch.value = "Azur Lane";
 // ddSortBy[2].selected = true;
 // END Code For Testing
+// ####################################
 
 let currentPage = 0;
 let lastPage = 0;
@@ -155,23 +163,33 @@ function getResults(e){
 
   // URL += "&q=" + txtSearch.value.replace(' ', '+');
   if (txtSearch.value.length > 0) {
+    // Is this the correct API syntax?: CORRECT
     searchString += "&q=" + txtSearch.value.replace(' ', '%20+');
+    // Or is this the correct API syntax?: INCORRECT
+    // searchString += "&q=" + txtSearch.value.replace(' ', '%20');
     // URL += "&q=" + txtSearch.value.replace(' ', '%20+');
   };
   if (txtExcludeSearch.value.length > 0) {
-    if (txtSearch.value.length <= 0) {
+    //if (txtSearch.value.length <= 0) {
+    if (searchString.length <= 0) {
       searchString += "&q=-";
       // URL += "&q=-";
     } else {
       searchString += "%20-";
       // URL += "%20-";
     }
+
+    // Is this the correct API syntax?: CORRECT
     searchString += txtExcludeSearch.value.replace(' ', '%20-');
+    // Or is this the correct API syntax?: INCORRECT
+    // searchString += txtExcludeSearch.value.replace(' ', '%20');
     // URL += txtExcludeSearch.value.replace(' ', '%20-');
   };
 
+  // Search Purity - SFW, sketchy, NSFW 100/110/111/etc (sfw/sketchy/nsfw)
+  // searchString += "&purity=111"; // NSFW
 
-  URL += searchString;
+  URL += searchString.replace(',', '');
   URL += "&sorting=" + ddSortBy.value;
 
   for (rdo of rdoSort){
@@ -431,9 +449,9 @@ function displayWallpaperDetailsModal(jsonData){
 
 function searchByTag(e){
   // e.preventDefault();
-  console.log(e);
+  // console.log(e);
 
-  txtSearch.value = e.srcElement.text;
+  txtSearch.value = e.srcElement.text.replace(',', '');
 
   $('#wallpaperDetailsModal').modal("hide")
 
@@ -541,9 +559,9 @@ function searchByColor(e){
   };
 
 
-  console.log(URL);
+  // console.log(URL);
 
-  console.log("https://wallhaven.cc/search?" + searchString.replace('#', ''));
+  // console.log("https://wallhaven.cc/search?" + searchString.replace('#', ''));
 
   fetch(proxyurl + URL)
   .then(result => {
