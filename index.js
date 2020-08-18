@@ -33,14 +33,14 @@ const errorHeader = document.getElementById("h2Error");
 const resultsDiv = document.getElementById("resultsDiv");
 // const moreDiv = document.getElementById("moreDiv");
 
-// moreDiv.style.display = 'none';
-resultsDiv.style.display = 'none';
-// resultsHeader.style.display = 'none';
-errorHeader.style.display = 'none';
+// moreDiv.style.display = "none";
+resultsDiv.style.display = "none";
+// resultsHeader.style.display = "none";
+errorHeader.style.display = "none";
 
 // const moreLink = document.getElementById("moreLink");
 // moreLink.addEventListener('click', getMoreResults); 
-// moreLink.style.display = 'none';
+// moreLink.style.display = "none";
 
 const headerDiv = document.getElementById("header");
 
@@ -121,11 +121,15 @@ let searchString = "";
 // console.log(URL);
 
 // BEGIN Code For Testing
-txtSearch.value = "space art";
-txtExcludeSearch.value = "anime";
+// txtSearch.value = "space art";
+// txtExcludeSearch.value = "anime";
+// txtSearch.value = "minimalism";
+txtSearch.value = "Cthulhu";
+// ddSortBy[2].selected = true;
 // END Code For Testing
 
 let currentPage = 0;
+let lastPage = 0;
 
 // setRandomHeaderImage();
 
@@ -137,13 +141,14 @@ function getResults(e){
     resultsDiv.removeChild(resultsDiv.firstChild);
   };
 
-  // resultsHeader.style.display = 'none';
-  resultsDiv.style.display = 'none';
-  errorHeader.style.display = 'none';
-  // moreDiv.style.display = 'none';
-  // moreLink.style.display = 'none';
+  // resultsHeader.style.display = "none";
+  resultsDiv.style.display = "none";
+  errorHeader.style.display = "none";
+  // moreDiv.style.display = "none";
+  // moreLink.style.display = "none";
 
   currentPage = 0;
+  lastPage = 0;
 
   URL = searchURL + apiURL;
   searchString = "";
@@ -213,6 +218,8 @@ function displayResults(jsonData){
     // moreLink.style.display = 'flex';
 
     currentPage++;
+    lastPage = jsonData.meta.last_page;
+    // console.log("current", currentPage, "last", lastPage);
 
     if (currentPage > 1) {
       let moreRowDiv = document.getElementById("moreRowDiv");
@@ -281,32 +288,37 @@ function displayResults(jsonData){
 
     let moreA = document.createElement("a");
     moreA.href = "#";
-    moreA.innerText =  "more";
+    moreA.innerText =  "more " + txtSearch.value + " wallpapers";
+    moreA.className = "colorBlackLink";
     // moreA.style = "text-align: right;";
     moreA.addEventListener('click', getMoreResults); 
 
 
     let moreRowDiv = document.createElement("div");
-    moreRowDiv.className = "row"; // "row clearfix";
+    moreRowDiv.className = "row justify-content-end p-4"; // "row clearfix";
     moreRowDiv.id = "moreRowDiv";
 
-    let moreColOneDiv = document.createElement("div");
-    moreColOneDiv.className = "col-md-11";
+    // let moreColOneDiv = document.createElement("div");
+    // moreColOneDiv.className = "col-md-11";
 
     let moreColTwoDiv = document.createElement("div");
-    moreColTwoDiv.className = "col-11 col-sm-1";
+    // moreColTwoDiv.className = "col-md-4";
+    moreColTwoDiv.className = "col text-right";
 
     moreColTwoDiv.appendChild(moreA);
 
-    moreRowDiv.appendChild(moreColOneDiv);
+    // moreRowDiv.appendChild(moreColOneDiv);
     moreRowDiv.appendChild(moreColTwoDiv);
     //resultsDiv.appendChild(moreRowDiv);
 
     resultsContainerDiv.appendChild(resultsRowDiv);
     resultsContainerDiv.appendChild(moreRowDiv);
+
+    if (currentPage >= lastPage) {
+      resultsContainerDiv.removeChild(moreRowDiv)
+    };
+
     resultsDiv.appendChild(resultsContainerDiv);
-
-
 
   };
 
@@ -351,15 +363,17 @@ function displayWallpaperDetailsModal(jsonData){
   wallpaperDetailsTags.innerHTML = "";
   wallpaperDetailsColors.innerHTML = "";
 
-  wallpaperModalTitle.innerHTML += results.id + " ";
+  // wallpaperModalTitle.innerHTML += results.id + " ";
   wallpaperModalTitle.innerHTML += "<strong>" + results.category.replace(/\b\w/g, l => l.toUpperCase()) + "</strong>";
   wallpaperModalTitle.innerHTML += " " + results.purity;
   wallpaperModalTitle.innerHTML += " (" + results.resolution + ")";
 
   let createDate = new Date(results.created_at);
-  wallpaperDetailsDate.innerHTML += createDate.toDateString();
+  wallpaperDetailsDate.innerHTML = createDate.toDateString();
 
-  wallpaperDetailsImage.src = results.thumbs.small;
+  // wallpaperDetailsImage.src = results.thumbs.small;
+  // wallpaperDetailsImage.src = results.thumbs.original;
+  wallpaperDetailsImage.src = results.thumbs.large;
 
   wallpaperDetailsImageLink.href = results.url; // page about the image
   // wallpaperDetailsImageLink.href = results.path; // image only
@@ -367,15 +381,40 @@ function displayWallpaperDetailsModal(jsonData){
 
   let wallpaperTags = results.tags;
   for (let i = 0; i < wallpaperTags.length; i++) {
-    wallpaperDetailsTags.innerHTML += wallpaperTags[i].id + wallpaperTags[i].name + " ";
+    // wallpaperDetailsTags.innerHTML += wallpaperTags[i].id + wallpaperTags[i].name + " ";
+
+    let wallpaperDetailsTagLink = document.createElement("a");
+    wallpaperDetailsTagLink.href = "#" + wallpaperTags[i].id;
+    wallpaperDetailsTagLink.innerHTML = wallpaperTags[i].name;
+    wallpaperDetailsTagLink.className = "mr-2";
+    wallpaperDetailsTagLink.addEventListener('click', searchByTag);
+    wallpaperDetailsTags.appendChild(wallpaperDetailsTagLink);
   };
 
 
   let wallpaperColors = results.colors;
   for (let i = 0; i < wallpaperColors.length; i++) {
-    wallpaperDetailsColors.innerHTML += wallpaperColors[i] + " ";
-  };
+    // wallpaperDetailsColors.innerHTML += wallpaperColors[i] + " ";
+    let wallpaperDetailsColorSpan = document.createElement("span");
+    wallpaperDetailsColorSpan.style.backgroundColor = wallpaperColors[i];
+    wallpaperDetailsColorSpan.className = "m-2 p-2";
+    // wallpaperDetailsColorSpan.innerHTML = wallpaperColors[i];
+    wallpaperDetailsColors.appendChild(wallpaperDetailsColorSpan);
 
+
+    let wallpaperDetailColorLink = document.createElement("a");
+    wallpaperDetailColorLink.href = "#";
+    wallpaperDetailColorLink.innerHTML = wallpaperColors[i];
+
+    if (wallpaperColors[i] == "#ffffff") {
+      wallpaperDetailColorLink.className = "colorBlackLink";
+    } else {
+      wallpaperDetailColorLink.className = "colorWhiteLink";
+    };
+
+    wallpaperDetailColorLink.addEventListener('click', searchByColor);
+    wallpaperDetailsColorSpan.appendChild(wallpaperDetailColorLink);
+  };
 
 
 
@@ -383,8 +422,136 @@ function displayWallpaperDetailsModal(jsonData){
 
 };
 
+function searchByTag(e){
+  // e.preventDefault();
+  console.log(e);
+
+  txtSearch.value = e.srcElement.text;
+
+  $('#wallpaperDetailsModal').modal("hide")
+
+  getResults(e);
+
+  // Using the tag id doesn't work here
+  // console.log(e.srcElement.hash);
+
+  // //
+  // // Duplicates code that's in function getResults(e)
+  // //
+  // while (resultsDiv.firstChild) { // while the value is not null
+  //   resultsDiv.removeChild(resultsDiv.firstChild);
+  // };
+
+  // // resultsHeader.style.display = "none";
+  // resultsDiv.style.display = "none";
+  // errorHeader.style.display = "none";
+  // // moreDiv.style.display = "none";
+  // // moreLink.style.display = "none";
+
+  // currentPage = 0;
+  // lastPage = 0;
+
+  // URL = searchURL + apiURL;
+  // searchString = "";
 
 
+  // searchString += "&id:=" + e.srcElement.hash.replace('#', '');
+
+
+  // URL += searchString;
+  // URL += "&sorting=" + ddSortBy.value;
+
+  // for (rdo of rdoSort){
+  //   if (rdo.checked) {
+  //     URL += "&order=" + rdo.value;
+  //   };
+  // };
+
+
+  // console.log(URL);
+
+  // fetch(proxyurl + URL)
+  // .then(result => {
+  //     // console.log(result);
+  //     return result.json();
+  // })
+  // .then(jsonData => {
+  //     // console.log(jsonData);
+  //     displayResults(jsonData);
+  // })
+  // .catch(err => {
+  //     console.log(err)
+  //     errorHeader.innerText = err;
+  //     errorHeader.style.display = 'flex';
+  // });
+
+
+}
+
+
+function searchByColor(e){
+  // e.preventDefault();
+  // console.log(e);
+
+  // Searches color using the tag name not the color api
+  //txtSearch.value = e.srcElement.text;
+  txtSearch.value = "";
+
+  $('#wallpaperDetailsModal').modal("hide")
+
+  //
+  // Duplicates code that's in function getResults(e)
+  //
+  while (resultsDiv.firstChild) { // while the value is not null
+    resultsDiv.removeChild(resultsDiv.firstChild);
+  };
+
+  // resultsHeader.style.display = "none";
+  resultsDiv.style.display = "none";
+  errorHeader.style.display = "none";
+  // moreDiv.style.display = "none";
+  // moreLink.style.display = "none";
+
+  currentPage = 0;
+  lastPage = 0;
+
+  URL = searchURL + apiURL;
+  searchString = "";
+
+
+  searchString += "&colors=" + e.srcElement.text.replace('#', '');
+
+
+  URL += searchString;
+  URL += "&sorting=" + ddSortBy.value;
+
+  for (rdo of rdoSort){
+    if (rdo.checked) {
+      URL += "&order=" + rdo.value;
+    };
+  };
+
+
+  console.log(URL);
+
+  console.log("https://wallhaven.cc/search?" + searchString.replace('#', ''));
+
+  fetch(proxyurl + URL)
+  .then(result => {
+      // console.log(result);
+      return result.json();
+  })
+  .then(jsonData => {
+      // console.log(jsonData);
+      displayResults(jsonData);
+  })
+  .catch(err => {
+      console.log(err)
+      errorHeader.innerText = err;
+      errorHeader.style.display = 'flex';
+  });
+
+}
 
 function getMoreResults(e){
   e.preventDefault();
