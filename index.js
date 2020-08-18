@@ -236,7 +236,6 @@ function displayResults(jsonData){
     for (let i = 0; i < results.length; i++) {
           // console.log(results[i]);
 
-
           let createDate = new Date(results[i].created_at);
 
           let wallpaperDiv = document.createElement("div");
@@ -365,7 +364,7 @@ function displayWallpaperDetailsModal(jsonData){
 
   // wallpaperModalTitle.innerHTML += results.id + " ";
   wallpaperModalTitle.innerHTML += "<strong>" + results.category.replace(/\b\w/g, l => l.toUpperCase()) + "</strong>";
-  wallpaperModalTitle.innerHTML += " " + results.purity;
+  // wallpaperModalTitle.innerHTML += " " + results.purity;
   wallpaperModalTitle.innerHTML += " (" + results.resolution + ")";
 
   let createDate = new Date(results.created_at);
@@ -382,10 +381,12 @@ function displayWallpaperDetailsModal(jsonData){
   let wallpaperTags = results.tags;
   for (let i = 0; i < wallpaperTags.length; i++) {
     // wallpaperDetailsTags.innerHTML += wallpaperTags[i].id + wallpaperTags[i].name + " ";
-
     let wallpaperDetailsTagLink = document.createElement("a");
     wallpaperDetailsTagLink.href = "#" + wallpaperTags[i].id;
-    wallpaperDetailsTagLink.innerHTML = wallpaperTags[i].name;
+    wallpaperDetailsTagLink.innerHTML += wallpaperTags[i].name;
+    if (i < wallpaperTags.length - 1) {
+      wallpaperDetailsTagLink.innerHTML += ",";
+    };
     wallpaperDetailsTagLink.className = "mr-2";
     wallpaperDetailsTagLink.addEventListener('click', searchByTag);
     wallpaperDetailsTags.appendChild(wallpaperDetailsTagLink);
@@ -397,23 +398,29 @@ function displayWallpaperDetailsModal(jsonData){
     // wallpaperDetailsColors.innerHTML += wallpaperColors[i] + " ";
     let wallpaperDetailsColorSpan = document.createElement("span");
     wallpaperDetailsColorSpan.style.backgroundColor = wallpaperColors[i];
-    wallpaperDetailsColorSpan.className = "m-2 p-2";
-    // wallpaperDetailsColorSpan.innerHTML = wallpaperColors[i];
+    // wallpaperDetailsColorSpan.className = "m-2 p-2";
+    wallpaperDetailsColorSpan.innerHTML = wallpaperColors[i];
+    if (wallpaperColors[i] == "#ffffff" || wallpaperColors[i] == "#ffff00") {
+      wallpaperDetailsColorSpan.className = "colorBlackText m-2 p-2";
+    } else {
+      wallpaperDetailsColorSpan.className = "colorWhiteText m-2 p-2";
+    };
     wallpaperDetailsColors.appendChild(wallpaperDetailsColorSpan);
 
 
-    let wallpaperDetailColorLink = document.createElement("a");
-    wallpaperDetailColorLink.href = "#";
-    wallpaperDetailColorLink.innerHTML = wallpaperColors[i];
+    // Using the colors paramater doesn't work here
+    // let wallpaperDetailColorLink = document.createElement("a");
+    // wallpaperDetailColorLink.href = "#";
+    // wallpaperDetailColorLink.innerHTML = wallpaperColors[i];
 
-    if (wallpaperColors[i] == "#ffffff") {
-      wallpaperDetailColorLink.className = "colorBlackLink";
-    } else {
-      wallpaperDetailColorLink.className = "colorWhiteLink";
-    };
+    // if (wallpaperColors[i] == "#ffffff") {
+    //   wallpaperDetailColorLink.className = "colorBlackLink";
+    // } else {
+    //   wallpaperDetailColorLink.className = "colorWhiteLink";
+    // };
 
-    wallpaperDetailColorLink.addEventListener('click', searchByColor);
-    wallpaperDetailsColorSpan.appendChild(wallpaperDetailColorLink);
+    // wallpaperDetailColorLink.addEventListener('click', searchByColor);
+    // wallpaperDetailsColorSpan.appendChild(wallpaperDetailColorLink);
   };
 
 
@@ -492,6 +499,8 @@ function searchByTag(e){
 function searchByColor(e){
   // e.preventDefault();
   // console.log(e);
+
+   // Using the colors paramater doesn't work here
 
   // Searches color using the tag name not the color api
   //txtSearch.value = e.srcElement.text;
@@ -580,7 +589,7 @@ function getMoreResults(e){
 
 
 
-// Get the results after the search
+// Changes the header background image to a random image
 function setRandomHeaderImage(){
 
   URL = URL + "&purity=100&sorting=random";

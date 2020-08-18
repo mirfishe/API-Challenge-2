@@ -112,3 +112,11 @@ a:link.colorWhiteLink, a:visited.colorWhiteLink, a:hover.colorWhiteLink, a:activ
 a:link.colorBlackLink, a:visited.colorBlackLink, a:hover.colorBlackLink, a:active.colorBlackLink {
   color: black;
 }
+
+.colorWhiteText {
+  color: white;
+}
+
+.colorBlackText {
+  color: black;
+}
