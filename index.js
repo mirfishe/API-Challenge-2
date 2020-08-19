@@ -286,6 +286,7 @@ function displayResults(jsonData){
           // wallpaperSpan2.style = "text-align: right;";
 
           let wallpaperImg = document.createElement("img");
+          wallpaperImg.className = "img-thumbnail";
           wallpaperImg.src = results[i].thumbs.small;
           wallpaperImg.alt = results[i].id;
 
@@ -401,6 +402,8 @@ function displayWallpaperDetailsModal(jsonData){
   // wallpaperDetailsImage.src = results.thumbs.small;
   // wallpaperDetailsImage.src = results.thumbs.original;
   wallpaperDetailsImage.src = results.thumbs.large;
+  wallpaperDetailsImage.alt = results.id;
+  wallpaperDetailsImage.className = "img-thumbnail";
 
   //wallpaperDetailsImageLink.href = results.url; // page about the image
   wallpaperDetailsImageLink.href = results.path; // image only
