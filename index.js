@@ -14,6 +14,7 @@ const txtSearch = document.getElementById("txtSearch");
 const txtExcludeSearch = document.getElementById("txtExcludeSearch");
 const ddSortBy = document.getElementById("ddSortBy");
 const rdoSort = document.querySelectorAll("input[name=\"rdoSort\"]");
+const ddPurity = document.getElementById("ddPurity");
 
 const btnSearch = document.getElementById("btnSearch");
 const searchForm = document.getElementById("frmSearch");
@@ -27,7 +28,7 @@ const wallpaperDetailsTags = document.getElementById("wallpaperDetailsTags");
 const wallpaperDetailsColors = document.getElementById("wallpaperDetailsColors");
 const wallpaperDetailsDate = document.getElementById("wallpaperDetailsDate");
 
-const errorHeader = document.getElementById("h2Error");
+const errorHeader = document.getElementById("errorHeader");
 // const resultsHeader = document.getElementById("h2Results");
 
 const resultsDiv = document.getElementById("resultsDiv");
@@ -53,6 +54,8 @@ let searchString = "";
 // let URL = imageURL + "39myl3" + apiURL; // SFW
 // URL = imageURL + "39myl3" + apiURL; // SFW
 // URL = imageURL + "xlq353" + apiURL; // NSFW
+
+// URL = imageURL + "md5zr9" + apiURL; // example: tagnames scrolling of the modal
 
 // Tag Information
 //URL = tagURL + "/1" + apiURL;
@@ -125,14 +128,17 @@ let searchString = "";
 // txtSearch.value = "minimalism";
 // txtSearch.value = "Cthulhu";
 // txtSearch.value = "Rogue";
+// txtSearch.value = "Rogue (X-men)";
 // txtSearch.value = "Star Wars";
 // txtSearch.value = "LEGO";
 // txtSearch.value = "Moon";
 // txtSearch.value = "architecture";
-txtSearch.value = "Asian architecture";
+// txtSearch.value = "Asian architecture";
+// txtSearch.value = "erotic art";
 // txtExcludeSearch.value = "anime";
-txtExcludeSearch.value = "Azur Lane";
+// txtExcludeSearch.value = "Azur Lane";
 // ddSortBy[2].selected = true;
+// ddPurity[2].selected = true;
 // END Code For Testing
 // ####################################
 
@@ -186,11 +192,12 @@ function getResults(e){
     // URL += txtExcludeSearch.value.replace(' ', '%20-');
   };
 
-  // Search Purity - SFW, sketchy, NSFW 100/110/111/etc (sfw/sketchy/nsfw)
-  // searchString += "&purity=111"; // NSFW
-
   URL += searchString.replace(',', '');
   URL += "&sorting=" + ddSortBy.value;
+
+  // Search Purity - SFW, sketchy, NSFW 100/110/111/etc (sfw/sketchy/nsfw)
+  // searchString += "&purity=111"; // NSFW
+  URL += "&purity=" + ddPurity.value;
 
   for (rdo of rdoSort){
     if (rdo.checked) {
@@ -224,10 +231,10 @@ function getResults(e){
 
 
 function displayResults(jsonData){
-  console.log(jsonData);
+  // console.log(jsonData);
 
   let results = jsonData.data;
-  console.log(results);
+  // console.log(results);
 
   if (results.length > 0) {
     // resultsHeader.style.display = 'flex';
@@ -248,7 +255,7 @@ function displayResults(jsonData){
     resultsContainerDiv.className = "container";
 
     let resultsRowDiv = document.createElement("div");
-    resultsRowDiv.className = "row";
+    resultsRowDiv.className = "row justify-content-center";
 
 
     for (let i = 0; i < results.length; i++) {
@@ -263,13 +270,14 @@ function displayResults(jsonData){
           //wallpaperP.innerHTML += "<strong>" + results[i].category + "</strong>";
           // From https://stackoverflow.com/questions/2332811/capitalize-words-in-string
           wallpaperP.innerHTML += "<strong>" + results[i].category.replace(/\b\w/g, l => l.toUpperCase()) + "</strong>";
-          wallpaperP.innerHTML += " " + results[i].purity;
+          // wallpaperP.innerHTML += " " + results[i].purity;
           wallpaperP.innerHTML += " (" + results[i].resolution + ")";
+          wallpaperP.innerHTML += " <small>" + results[i].purity + "</small>";
           // wallpaperP.innerHTML += " " + createDate.toDateString();
 
           let wallpaperP2 = document.createElement("p");
           // wallpaperP2.innerHTML += " (" + results[i].resolution + ")";
-          wallpaperP2.innerHTML += "    " + createDate.toDateString();
+          // wallpaperP2.innerHTML += "    " + createDate.toDateString();
           // let wallpaperSpan1 = document.createElement("span");
           // wallpaperSpan1.innerHTML += " (" + results[i].resolution + ")";
           // wallpaperSpan1.style = "text-align: left;";
@@ -320,7 +328,7 @@ function displayResults(jsonData){
 
     let moreColTwoDiv = document.createElement("div");
     // moreColTwoDiv.className = "col-md-4";
-    moreColTwoDiv.className = "col text-right";
+    moreColTwoDiv.className = "col-md-auto text-right";
 
     moreColTwoDiv.appendChild(moreA);
 
@@ -374,7 +382,7 @@ function displayWallpaperDetailsModal(jsonData){
   // console.log(jsonData);
 
   let results = jsonData.data;
-  console.log(results);
+  // console.log(results);
 
   wallpaperModalTitle.innerHTML = "";
   wallpaperDetailsTags.innerHTML = "";
@@ -387,13 +395,15 @@ function displayWallpaperDetailsModal(jsonData){
 
   let createDate = new Date(results.created_at);
   wallpaperDetailsDate.innerHTML = createDate.toDateString();
+  wallpaperModalTitle.innerHTML += " <small>" + createDate.toDateString() + "</small>";
+  wallpaperDetailsDate.style.display = 'none';
 
   // wallpaperDetailsImage.src = results.thumbs.small;
   // wallpaperDetailsImage.src = results.thumbs.original;
   wallpaperDetailsImage.src = results.thumbs.large;
 
-  wallpaperDetailsImageLink.href = results.url; // page about the image
-  // wallpaperDetailsImageLink.href = results.path; // image only
+  //wallpaperDetailsImageLink.href = results.url; // page about the image
+  wallpaperDetailsImageLink.href = results.path; // image only
   wallpaperDetailsImageLink.target = "_blank";
 
   let wallpaperTags = results.tags;
@@ -452,6 +462,7 @@ function searchByTag(e){
   // console.log(e);
 
   txtSearch.value = e.srcElement.text.replace(',', '');
+  txtExcludeSearch.value = "";
 
   $('#wallpaperDetailsModal').modal("hide")
 

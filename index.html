@@ -54,8 +54,8 @@
 
       <section>
         <div class="container">
-            <div class="row justify-content-start">
-
+          <h4 id="errorHeader" class="error"></h4>
+            <div class="row justify-content-center">
                   <form id="frmSearch">
 
                   <div class="form-inline">
@@ -87,18 +87,18 @@
                       <input class="form-check-input" type="radio" id="rdoAscending" name="rdoSort" value="asc">
                       <label class="form-check-label" for="rdoAscending">Ascending</label>
                     </div>
+
+                    <select class="form-control m-2 p-2" id="ddPurity">
+                      <option value="100">SFW</option>
+                      <option value="110">Sketchy</option>
+                      <option value="111">NSFW</option>
+                    </select>
+
                     </div>
-                      <!-- <button type="button" data-toggle="modal" data-target="#wallpaperDetailsModal">Launch modal</button> -->
                   </form>
 
               </div>
 
-                <div class="row">
-                <div class="col"> 
-                  <h2 id="h2Error" class="error"></h2>
-                  <!-- <h2 id="h2Results" class="results">Results</h2> -->
-                </div>
-              </div>
               <div id="resultsDiv" class="row"></div>
               <!-- <div id="moreDiv" class="row">
                 <div class="col-md-11"></div>
@@ -117,9 +117,9 @@
                 </button>
               </div>
               <div class="modal-body">
-                <p id="wallpaperDetailsTags"></p>
-                <a id="wallpaperDetailsImageLink" href=""><img id="wallpaperDetailsImage" class="img-center"></a>
+                <a id="wallpaperDetailsImageLink" href=""><img id="wallpaperDetailsImage" class="img-center mb-2"></a>
                 <p id="wallpaperDetailsDate" class="text-right"></p>
+                <p id="wallpaperDetailsTags"></p>
                 <p id="wallpaperDetailsColors"></p>
               </div>
               <div class="modal-footer">
