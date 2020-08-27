@@ -14,7 +14,7 @@ const txtSearch = document.getElementById("txtSearch");
 const txtExcludeSearch = document.getElementById("txtExcludeSearch");
 const ddSortBy = document.getElementById("ddSortBy");
 const rdoSort = document.querySelectorAll("input[name=\"rdoSort\"]");
-// const ddPurity = document.getElementById("ddPurity");
+const ddPurity = document.getElementById("ddPurity");
 
 const btnSearch = document.getElementById("btnSearch");
 const searchForm = document.getElementById("frmSearch");
@@ -197,7 +197,7 @@ function getResults(e){
 
   // Search Purity - SFW, sketchy, NSFW 100/110/111/etc (sfw/sketchy/nsfw)
   // searchString += "&purity=111"; // NSFW
-  // URL += "&purity=" + ddPurity.value;
+  URL += "&purity=" + ddPurity.value;
 
   for (rdo of rdoSort){
     if (rdo.checked) {
@@ -363,7 +363,7 @@ function loadWallpaperDetailsModal(e){
 
   fetch(proxyurl + imageURL + wallpaperID + apiURL)
   .then(result => {
-      //console.log(result);
+      // console.log(result);
       return result.json();
   })
   .then(jsonData => {
