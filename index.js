@@ -624,16 +624,16 @@ function getMoreResults(e){
 // Changes the header background image to a random image
 function setRandomHeaderImage(){
 
-  URL = URL + "&purity=100&sorting=random";
-  // console.log(URL);
+  URL = searchURL + apiURL + "&purity=100&sorting=random";
+  console.log(URL);
 
   fetch(proxyurl + URL)
   .then(result => {
-      // console.log(result);
+      console.log(result);
       return result.json();
   })
   .then(jsonData => {
-      // console.log(data);
+      console.log(jsonData);
       // displayResults(jsonData);
 
       // console.log(jsonData.data[0].path);
